@@ -12,30 +12,36 @@ def incubator
     incubator_postalcode = []
     incubator_website = []
     my_hash = Hash.new #création du hash
+
     page = Nokogiri::HTML(open(PAGE_URL))
+
     i = 0
 
- 
     page.css('tr td p span a').each do |name|
         incubator_names << name.text #scrap des données nom des incubateurs
-        puts incubator_names
     end
 
-    page.css('tr td p a').each do |p| #scrap des données code postal
-        incubator_postalcode << p.text
-        puts incubator_postalcode
+    sites = page.css('a') 
+    lien = sites.each{|link| print link['href'] + " "}
+    lien.each do |site| #scrap des sites internet
+        incubator_website << site.text
     end
 
-    page.css('tr td p a').each do |site| #scrap des sites internet
-        incubator_website << site
+    zip = page.css('a').text #scrap des données code postal
+        zip.each do |z| #scrap des sites internet
+        incubator_postalcode << z.text
     end
+
 
     size = incubator_names.length
     while i < size do #boucle pour ranger tableaux dans le hash
-        my_hash[incubator_names[i]] = incubator_postalcode[i], incubator_website[i]
+        my_hash[incubator_names[i]] = incubator_postalcode[i]
+        my_hash[incubator_names[i]] = incubator_website[i]
         i += 1 #évolution indice du hash 
     end
     puts my_hash
- 
+
 end
+
 incubator
+
